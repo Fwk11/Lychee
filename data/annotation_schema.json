@@ -1,0 +1,61 @@
+{
+  "schema_version": "2.0",
+  "name": "Lychee 工业级视频标注模板 · RLHF",
+  "default_framerate": 30,
+  "legend_1_10": "评分锚点（1-10）：1=渣片/不可用  3=业余  5=合格  7=专业成片感  9=大师级/惊艳  10=完美",
+  "timeline_labels": [
+    {"name": "camera", "title": "运镜", "values": ["固定", "推", "拉", "摇(水平)", "摇(垂直)", "移", "升降", "跟拍", "环绕", "手持", "斯坦尼康", "航拍", "变焦", "甩镜", "旋转"]},
+    {"name": "scale", "title": "景别", "values": ["大远景", "远景", "全景", "中景", "中近景", "近景", "特写", "大特写"]},
+    {"name": "angle", "title": "角度", "values": ["平视", "俯拍", "仰拍", "顶视", "底拍", "荷兰角", "鸟瞰", "蚁视"]},
+    {"name": "lens", "title": "镜头/景深", "values": ["广角", "标准", "长焦", "鱼眼", "微距", "浅景深", "深景深"]},
+    {"name": "composition", "title": "构图", "values": ["三分法", "中心构图", "对称", "引导线", "框架式", "留白", "对角线", "黄金分割", "重复韵律", "对比"]},
+    {"name": "exposure", "title": "曝光", "values": ["正常", "过曝", "欠曝"]},
+    {"name": "light_position", "title": "光位", "values": ["顺光", "侧光", "逆光", "顶光", "底光", "伦勃朗光"]},
+    {"name": "light_quality", "title": "光质", "values": ["硬光", "柔光"]},
+    {"name": "light_source", "title": "光源", "values": ["自然光", "人造光", "混合光"]},
+    {"name": "tone", "title": "影调", "values": ["高调", "低调", "中间调"]},
+    {"name": "color_temp", "title": "色温", "values": ["暖调", "冷调", "中性"]},
+    {"name": "saturation", "title": "饱和度", "values": ["低饱和", "正常", "高饱和"]},
+    {"name": "color_scheme", "title": "配色", "values": ["互补色", "类似色", "单色", "撞色", "莫兰迪"]},
+    {"name": "people", "title": "人物", "values": ["单人", "多人", "群像", "无人物"]},
+    {"name": "text_in_frame", "title": "画面文字", "values": ["无", "标题字幕", "水印", "标语LOGO"]},
+    {"name": "issue", "title": "质量·问题", "values": ["无问题", "模糊", "抖动", "噪点", "畸变", "过曝", "欠曝", "偏色", "水印", "黑边", "卡顿", "割裂"]}
+  ],
+  "scores": [
+    {"name": "a_comp", "title": "构图美感", "group": "美学", "anchors": {"1": "混乱无焦点", "5": "中规中矩", "7": "专业构图", "10": "大师级构图"}},
+    {"name": "a_color", "title": "色彩和谐", "group": "美学", "anchors": {"1": "刺眼杂乱", "5": "尚可", "7": "和谐有调性", "10": "惊艳配色"}},
+    {"name": "a_light", "title": "光影质感", "group": "美学", "anchors": {"1": "平光无层次", "5": "正常", "7": "有质感", "10": "电影级光影"}},
+    {"name": "a_subject", "title": "主体突出", "group": "美学", "anchors": {"1": "主体迷失", "5": "清楚", "7": "主体鲜明", "10": "完美引导视线"}},
+    {"name": "a_depth", "title": "景深层次", "group": "美学", "anchors": {"1": "扁平", "5": "有层次", "7": "丰富", "10": "立体如画"}},
+    {"name": "a_mood", "title": "情绪氛围", "group": "美学", "anchors": {"1": "无情绪", "5": "平静", "7": "有感染力", "10": "沉浸式氛围"}},
+    {"name": "a_rhythm", "title": "视觉节奏", "group": "美学", "anchors": {"1": "拖沓", "5": "平稳", "7": "流畅", "10": "行云流水"}},
+    {"name": "a_consist", "title": "风格一致", "group": "美学", "anchors": {"1": "杂乱", "5": "一致", "7": "统一", "10": "极致统一"}},
+    {"name": "a_art", "title": "艺术惊艳度", "group": "美学", "anchors": {"1": "无感", "5": "普通", "7": "好看", "10": "惊艳"}},
+    {"name": "a_overall", "title": "整体美学总分", "group": "美学·总分", "anchors": {"1": "渣片", "4": "业余", "7": "专业成片", "9": "大师级", "10": "完美"}},
+    {"name": "t_sharp", "title": "清晰度锐度", "group": "技术", "anchors": {"1": "严重模糊", "5": "清晰", "7": "锐利", "10": "极致清晰"}},
+    {"name": "t_noise", "title": "噪点控制", "group": "技术", "anchors": {"1": "满屏噪点", "5": "可接受", "7": "干净", "10": "纯净"}},
+    {"name": "t_drange", "title": "动态范围", "group": "技术", "anchors": {"1": "死白死黑", "5": "正常", "7": "宽容", "10": "电影级"}},
+    {"name": "t_expo", "title": "曝光准确", "group": "技术", "anchors": {"1": "严重过/欠曝", "5": "准确", "7": "精准", "10": "完美曝光"}},
+    {"name": "t_wb", "title": "白平衡", "group": "技术", "anchors": {"1": "严重偏色", "5": "正常", "7": "准确", "10": "完美"}},
+    {"name": "t_distort", "title": "畸变控制", "group": "技术", "anchors": {"1": "严重畸变", "5": "正常", "7": "良好", "10": "无畸变"}},
+    {"name": "t_fluid", "title": "帧率流畅", "group": "技术", "anchors": {"1": "卡顿", "5": "流畅", "7": "顺滑", "10": "丝滑"}},
+    {"name": "t_compress", "title": "压缩质量", "group": "技术", "anchors": {"1": "大量伪影", "5": "正常", "7": "良好", "10": "无损感"}}
+  ],
+  "choices": [
+    {"name": "content_rating", "title": "内容分级", "values": ["全年龄", "青少年+", "成人", "限制"]},
+    {"name": "sensitive", "title": "敏感内容", "values": ["无", "暴力", "血腥", "成人", "政治敏感", "其他"]},
+    {"name": "face_privacy", "title": "人脸隐私", "values": ["无人脸", "有路人", "有可识别人物"]},
+    {"name": "copyright", "title": "版权水印", "values": ["无", "平台水印", "第三方水印"]},
+    {"name": "commercial", "title": "可否商用", "values": ["可商用", "不可商用", "需授权"]},
+    {"name": "quality_tier", "title": "质量梯队(RLHF)", "values": ["S", "A", "B", "C", "D"]},
+    {"name": "subjective_feel", "title": "主观感受", "values": ["惊艳", "舒适", "平淡", "不适"]},
+    {"name": "vs_control", "title": "优于同批对照", "values": ["优于", "持平", "劣于", "未对比"]},
+    {"name": "reannotate", "title": "需人工重标", "values": ["否", "是"]},
+    {"name": "confidence", "title": "标注置信度", "values": ["高", "中", "低"]},
+    {"name": "shot_function", "title": "镜头功能", "values": ["建置", "动作", "反应", "过场", "空镜", "转场"]},
+    {"name": "edit_pace", "title": "剪辑节奏", "values": ["快", "中", "慢"]}
+  ],
+  "texts": [
+    {"name": "preference_reason", "title": "偏好理由（RLHF）"}
+  ]
+}

@@ -1,0 +1,23 @@
+# 核心依赖（视频分析 + 音乐推荐本地引擎 + Web 服务）
+# 版本按 ai conda 环境实测可用版本固定，避免升级踩坑
+opencv-python>=4.7,<5.1
+numpy>=1.23,<3
+scikit-learn>=1.2
+
+# Web 服务（FastAPI + ASGI 服务器）
+fastapi==0.115.0
+uvicorn==0.32.0
+pydantic>=2.5,<3
+
+# HTTP 客户端：QQ音乐新歌抓取 / 二维码短链跟随 / 小说下载 / LS 桥接
+requests>=2.28
+# FastAPI TestClient 依赖（仅测试需要，装 fastapi 时通常已附带）
+httpx>=0.24
+
+# VLM 画面理解：本地 Ollama（无需 pip 包，需先安装 Ollama 并 `ollama pull qwen2.5vl:3b`）
+# 可选：Part 1 的 LabelStudio 集成需要（体积较大，按需安装）
+#   pip install label-studio
+# 可选：接 QQ音乐在线推荐需要本地运行一个 QQ音乐 API 网关，
+#   再设置环境变量 QQMUSIC_API_BASE
+# 可选：LangChain/LangGraph Agent（ReAct 编排），仅 /api/agent/chat 用到
+#   pip install langchain-ollama langgraph langchain-core

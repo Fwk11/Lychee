@@ -1,0 +1,42 @@
+# 密钥与本地配置
+.env
+# 运行产物
+logs/
+output/reports/
+output/recommendations/
+output/frames/
+output/archive/
+output/annotations/
+# 静态站构建产物（scripts/build_static.py 可再生）
+output/dist/
+# 大文件数据（按需决定是否提交）
+data/raw/videos/
+# 生成数据（由脚本/模型产生，按需本地重建，不入库）
+data/novel/
+data/music/
+data/video/
+data/raw/
+*.mp3
+*.mp4
+*.wav
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+data/music/.qq_cookie
+.vercel
+# 本地凭据/配置(含 Label Studio token，禁止提交)
+data/label_studio.json
+# 求职/面试准备/隐私文档（绝不入库）
+INTERVIEW*.md
+INTERVIEW_PREP.md
+PROJECT_DESIGN.md
+*面试*.md
+*面经*.md
+# Label Studio / 本地运行产物（本机独有，禁止提交）
+*.sqlite3
+*.db
+media/
+outputs/
+runs/

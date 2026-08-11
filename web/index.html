@@ -1,0 +1,260 @@
+<!-- 单页应用骨架：3 个 Tab（音乐 / 视频 / 小说）。 -->
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lychee · 音乐推荐 · 视频标注 · 小说有声剧场</title>
+<link rel="icon" type="image/svg+xml" href="/static/assets/lychee-icon.svg?v=4">
+<link rel="stylesheet" href="/static/style.css?v=202608071900">
+</head>
+<body>
+<canvas id="aurora"></canvas>
+<div class="grain"></div>
+<div class="spotlight" id="spotlight"></div>
+<div class="scroll-progress" id="scroll-progress"></div>
+<header>
+  <div class="brand">Lychee</div>
+  <nav>
+    <button class="tab active" data-tab="music">音乐推荐</button>
+    <button class="tab" data-tab="video">视频标注</button>
+    <button class="tab" data-tab="novel">小说剧场</button>
+  </nav>
+  <button class="theme-toggle" id="theme-toggle" aria-label="切换主题" title="切换主题 (T)">☾</button>
+</header>
+
+<div class="static-banner hidden" id="static-banner">
+  <span class="dot"></span>
+  <span>本地后端 <code>http://127.0.0.1:8000</code> 未启动时，仅音乐推荐可用</span>
+</div>
+
+<!-- ================= 音乐 ================= -->
+<main id="tab-music" class="tabpage">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-left">
+        <h1>每周一荐 · 上周新歌</h1>
+        <div class="hero-kpi" id="hero-kpi">
+          <div class="hk"><span class="n">—</span><span class="l">分析曲目</span></div>
+          <div class="hk"><span class="n">—</span><span class="l">上周新歌</span></div>
+          <div class="hk"><span class="n">—</span><span class="l">推荐命中</span></div>
+        </div>
+
+        <!-- 上传你的音乐卡片：识别后按你的口味推荐 -->
+        <div class="music-onboard" id="music-onboard">
+          <div class="ob-card" id="qr-dropzone">
+            <div class="ob-icon">🎵</div>
+            <div class="ob-text">
+              <div class="ob-title">上传你的 QQ音乐 卡片</div>
+            </div>
+            <button class="ob-btn" id="qr-submit" type="button">上传卡片</button>
+            <input type="file" id="qr-file" accept="image/*" hidden />
+          </div>
+          <div class="ob-foot">
+            <span class="ob-status muted small" id="ob-status"></span>
+            <span class="ob-links" id="ob-links"></span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="sheet-profile" id="sheet-profile">
+          <div class="sp-head">
+            <span class="sp-icon">🎼</span>
+            <span class="sp-title">真·谱子画像</span>
+            <span class="sp-badge" id="sp-count">—</span>
+          </div>
+          <div class="sp-bars" id="sp-bars"></div>
+          <div class="sp-status muted small" id="sp-status">尚未生成</div>
+          </div>
+      </div>
+    </div>
+    <div class="hero-glow"></div>
+  </section>
+
+  <div class="section-title-row">
+    <svg class="platform-icon qq" viewBox="0 0 24 24" width="22" height="22" aria-label="QQ音乐">
+      <circle cx="12" cy="12" r="11" fill="#31C27C"/>
+      <path d="M16.2 6.3c-.4 0-.8.2-1.1.5l-2.3 2.6c-.4.4-.3.9.2 1.1.5.2 1.1.5 1.4.9.4.5.3 1.1-.3 1.4-.5.3-1.2.2-1.6-.2-.4-.4-.5-1-.3-1.5.2-.4 0-.9-.4-1.1-.4-.2-.9 0-1.1.4-.5 1-.3 2.2.5 3 1 1 2.6 1.2 3.7.4 1.2-.8 1.6-2.4.9-3.6-.2-.3-.4-.6-.7-.8l1.6-1.8c.5-.5.4-1.3-.1-1.7-.3-.3-.6-.4-1-.4zM9.4 8.6c-.5-.2-1.1 0-1.3.5l-1 2.9c-.2.5.1 1 .6 1.2.6.2 1.1.6 1.3 1.1.2.6-.1 1.2-.7 1.4-.6.2-1.3-.1-1.5-.7-.2-.5-.1-1.1.3-1.5.4-.3.4-.9.1-1.3-.3-.4-.9-.5-1.3-.2-1 .7-1.4 2-.9 3.1.5 1.1 1.9 1.7 3.1 1.3 1.3-.4 2-1.8 1.6-3.1-.1-.4-.3-.7-.6-1l1.8-1.6c.5-.4.5-1.2.1-1.6-.2-.2-.5-.3-.8-.4z" fill="#fff"/>
+    </svg>
+    <span id="music-count">全部 0 首推荐</span>
+  </div>
+  <div class="song-list" id="new-releases-list">
+    <div class="skeleton" style="height:60px"></div>
+    <div class="skeleton" style="height:60px"></div>
+    <div class="skeleton" style="height:60px"></div>
+    <div class="skeleton" style="height:60px"></div>
+  </div>
+
+</main>
+
+<!-- ================= 视频 ================= -->
+<main id="tab-video" class="tabpage hidden">
+
+  <div class="upload-panel" id="video-upload-panel">
+    <div class="upload-dropzone" id="upload-dropzone">
+      <span class="upload-icon">⬆</span>
+      <p>拖拽视频文件到这里，或点击选择（支持多文件）</p>
+      <input type="file" id="video-file-input" accept="video/*" multiple hidden>
+      <button class="btn accent" id="upload-select-btn">选择视频</button>
+    </div>
+    <div class="upload-queue" id="upload-queue"></div>
+  </div>
+
+  <div class="video-grid">
+    <aside class="sidebar">
+      <div class="panel-head"><h3>标注记录</h3>
+        <button class="btn small" id="btn-reload-videos">↻</button>
+      </div>
+      <div id="video-batch-bar" class="batch-bar hidden">
+        <div class="batch-left">
+          <label class="chk"><input type="checkbox" id="video-select-all"> 全选</label>
+          <span id="video-sel-count" class="muted small">已选 0 项</span>
+        </div>
+        <div class="batch-right">
+          <button class="btn small danger" id="btn-batch-delete" disabled title="删除选中记录">🗑</button>
+          <button class="btn small" id="btn-batch-export-csv" disabled title="导出选中记录为 CSV">CSV</button>
+          <button class="btn small" id="btn-batch-export-json" disabled title="导出选中记录为 JSON">JSON</button>
+        </div>
+      </div>
+      <div id="video-list" class="video-list"></div>
+    </aside>
+    <section>
+      <div id="video-empty" class="empty"><p>从左侧选择一条标注记录查看结果</p></div>
+      <div id="video-report" class="hidden"></div>
+    </section>
+  </div>
+</main>
+
+<!-- ================= 小说剧场 ================= -->
+<main id="tab-novel" class="tabpage hidden">
+
+  <div class="novel-grid">
+    <aside class="sidebar">
+      <div class="panel-head"><h3>书架</h3><button class="btn small" id="btn-reload-novels">↻</button></div>
+      <div id="novel-static-hint" class="panel static-hint hidden">
+        <code class="static-hint-code">http://127.0.0.1:8000/?key=dc_QrMbuAvVUEf3iCi591MGIQm0ZUEli</code>
+      </div>
+      <div id="novel-controls" style="padding:8px 4px;display:flex;flex-direction:column;gap:8px">
+        <label class="btn small accent" for="novel-upload-input" style="text-align:center">⬆ 上传书籍</label>
+        <input id="novel-upload-input" type="file" accept=".txt,.docx,.epub,.pdf,.mobi,.azw3,text/plain" hidden>
+        <div class="src-tabs">
+          <button class="src-tab active" data-src="qidian">起点</button>
+        </div>
+        <div style="display:flex;gap:6px">
+          <input id="novel-search-input" placeholder="输入书名搜起点" style="flex:1" autocomplete="off">
+          <button class="btn small" id="btn-novel-search">🔍</button>
+        </div>
+        <div id="novel-search-results" style="display:none"></div>
+        <details class="paste-box">
+          <summary>起点·智能导入（自动识别）</summary>
+          <textarea id="qidian-smart-input" placeholder="粘贴【起点书籍页网址】或【章节正文】，系统自动识别并导入，无需填书名/作者"></textarea>
+          <button class="btn small accent" id="btn-qidian-smart">智能导入</button>
+        </details>
+        <div id="novel-upload-status" class="muted small" style="min-height:18px"></div>
+      </div>
+      <div id="novel-list" class="video-list"></div>
+    </aside>
+    <section>
+      <div id="novel-empty" class="empty"><p>从书架选择一本小说，开始分析或收听</p></div>
+      <div id="novel-detail" class="hidden">
+        <div class="panel" style="margin-bottom:14px">
+          <div class="panel-head"><h3>章节</h3></div>
+          <div id="novel-chapters" style="max-height:340px;overflow:auto"></div>
+        </div>
+        <div class="panel hidden" id="novel-result-panel">
+          <div class="result-tabs">
+            <button class="tab-btn active" data-rtab="sb" title="分镜">🎬</button>
+          </div>
+          <div id="novel-sb-box" class="rtab-box"></div>
+          <div id="novel-consistency-box" class="rtab-box cons-box hidden"></div>
+          <div id="novel-audio-box" class="rtab-box hidden"></div>
+          <div id="novel-voice-catalog" class="voice-catalog hidden"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+
+<div class="toast" id="toast"></div>
+
+<!-- 沉浸阅读器（居中卡片弹窗） -->
+<div class="reader-overlay hidden" id="chapter-modal">
+  <div class="reader-card" id="reader-card">
+    <div class="reader-scroll-bar" id="reader-scroll-bar"></div>
+    <aside class="reader-toc hidden" id="reader-toc">
+      <div class="reader-toc-head">
+        <h4 id="reader-toc-title">目录</h4>
+        <button class="reader-toc-close" id="reader-toc-close">✕</button>
+      </div>
+      <div class="reader-toc-search">
+        <input type="text" id="reader-toc-search" placeholder="搜索章节…" />
+      </div>
+      <div class="reader-toc-list" id="reader-toc-list"></div>
+    </aside>
+  <div class="reader-main">
+    <header class="reader-head">
+      <div class="reader-head-left">
+        <button class="reader-icon-btn" id="reader-toc-toggle" title="目录">☰</button>
+        <span class="reader-title" id="chapter-modal-title">章节</span>
+      </div>
+      <div class="reader-head-right">
+        <button class="reader-icon-btn" id="reader-font-minus" title="缩小字号">A−</button>
+        <button class="reader-icon-btn" id="reader-font-plus" title="放大字号">A+</button>
+        <button class="reader-icon-btn" id="reader-settings-toggle" title="阅读设置">⚙</button>
+        <button class="reader-icon-btn" id="chapter-modal-close" title="关闭">✕</button>
+      </div>
+    </header>
+    <div class="reader-settings hidden" id="reader-settings">
+      <div class="rs-row">
+        <span class="rs-label">字体</span>
+        <div class="rs-seg" id="rs-font">
+          <button data-v="serif" class="active">衬线</button>
+          <button data-v="sans">无衬线</button>
+        </div>
+      </div>
+      <div class="rs-row">
+        <span class="rs-label">行距</span>
+        <div class="rs-seg" id="rs-line">
+          <button data-v="1.7">紧</button>
+          <button data-v="1.95" class="active">标准</button>
+          <button data-v="2.3">松</button>
+        </div>
+      </div>
+      <div class="rs-row">
+        <span class="rs-label">主题</span>
+        <div class="rs-seg" id="rs-theme">
+          <button data-v="default" class="active">默认</button>
+          <button data-v="paper">羊皮纸</button>
+          <button data-v="night">暗夜</button>
+        </div>
+      </div>
+    </div>
+    <div class="reader-body" id="chapter-modal-body">
+      <div class="reader-content"></div>
+    </div>
+    <footer class="reader-foot">
+      <button class="reader-nav-btn" id="reader-prev">← 上一章</button>
+      <div class="reader-progress">
+        <div class="reader-progress-bar"><div id="reader-progress-fill"></div></div>
+        <span class="reader-progress-text" id="reader-progress-text">—</span>
+      </div>
+      <button class="reader-nav-btn" id="reader-next">下一章 →</button>
+    </footer>
+  </div>
+  </div>
+</div>
+
+<!-- 前端脚本：经典脚本，共享全局作用域，须按依赖顺序加载；bootstrap 最后 -->
+<script src="/static/js/util.js?v=2026080416"></script>
+<script src="/static/js/theme.js?v=2026080416"></script>
+<script src="/static/js/api.js?v=2026080416"></script>
+<script src="/static/js/route.js?v=2026080416"></script>
+<script src="/static/js/music.js?v=202608062050"></script>
+<script src="/static/js/video.js?v=202608062130"></script>
+<script src="/static/js/novel.js?v=2026080416"></script>
+<script src="/static/js/effects.js?v=2026080416"></script>
+<script src="/static/js/bootstrap.js?v=2026080416"></script>
+</body>
+</html>
